@@ -1,0 +1,215 @@
+add        Add file contents to the index
+   bisect     Find by binary search the change that introduced a bug
+   branch     List, create, or delete branches
+   checkout   Checkout a branch or paths to the working tree
+   clone      Clone a repository into a new directory
+   commit     Record changes to the repository
+   diff       Show changes between commits, commit and working tree, etc
+   fetch      Download objects and refs from another repository
+   grep       Print lines matching a pattern
+   init       Create an empty Git repository or reinitialize an existing one
+   log        Show commit logs
+   merge      Join two or more development histories together
+   mv         Move or rename a file, a directory, or a symlink
+   pull       Fetch from and merge with another repository or a local branch
+   push       Update remote refs along with associated objects
+   rebase     Forward-port local commits to the updated upstream head
+   reset      Reset current HEAD to the specified state
+   rm         Remove files from the working tree and from the index
+   show       Show various types of objects
+   status     Show the working tree status
+   tag        Create, list, delete or verify a tag object signed with GPG
+GIT INSTALLATIONS:
+-----------------
+sudo yum groupinstall "development tools"
+sudo yum install gettext-devel openssl-devel perl-CPAN perl-devel zlib-devel
+sudo yum install wget
+wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.14.2.tar.gz
+tar -zxf git-2.14.2.tar.gz
+cd git-2.14.2
+make configure
+./configure --prefix=/user/local
+sudo make install
+git --version
+git config --global user.name "murali"
+git config --global user.email "mamurali93@gmail.com"
+git config --list
+ssh-keygen -t rsa -C "myEmail@gmail.com" (or)
+ssh-keygen -t rsa -c "mamurali93@gmail.com" (or) 
+ssh-keygen -t rsa -b 4096 -c "mamurali93@gmail.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub
+ssh -T git@github.com
+
+vagrant installatioins:
+-----------------------
+vagrant init geerlingguy/centos6
+vagrant up
+vagrant ss-configure
+vagrant ssh
+
+apt-get install yum-utils
+apt-get install yum
+apt-get update
+
+tomcat appache 9:
+------------------
+wget https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.0.M10/bin/apache-tomcat-9.0.0.M10-deployer.tar.gz
+tar -zxf apache-tomcat-9.0.0.M10-deployer.tar.gz
+
+jenkins -Installation:
+------------
+process 1). (jenkins.war install command : java -jar jenkins.war)
+              
+Add the Jenkins repository to the yum repos, and install Jenkins from here.
+
+process 2). cd /etc/yum.repos.d/
+ll
+sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+sudo yum install jenkins
+sudo chkconfig jenkins on
+chkconfig --list
+chkconfig --list | grep jenkins
+sudo yum install java-1.8.0-openjdk
+sudo service jenkins start
+sudo service jenkins status
+ifconfig
+cat /var/lib/jenkins/secrets/initialAdminpassword
+
+(error: ifconfig command not found)
+sudo yum install net-tools
+ip addr
+yum upgrade -y
+yum install net-tools mc vim -y
+ifconfig
+
+                          INTERVIEW QUESTIONS
+note: 1).what is slave ?
+answer: connecting the remote mechine slaves will help you.
+jenkins slave  help you jenkins master to remote mechine connectivity 
+
+2). what is jenkins master?
+ans: where ever you installed jenkins that machine called as a jenkins master.
+3).jenkins in job creation minimum need requirements?
+Answer: 
+--slave
+--svn/git/url
+--ant/maven
+--unit test
+--report(EMAIL)
+                                        work flow:   
+--------------------------------------------------------------------------------------------------
+                                         slaves;
+open jenkins -->create newjob--> enter the item name" hello world" -->free style project--> ok.
+general--> descripetion " banking" -->build--> executeshell " echo 'hi this is hello world'--> apply-->save.
+build now-->check build status-->console output.
+-->manage jenkins-->manage node-->master-->new node-->node name" wslave"-->perament agent click-->ok.
+name: wslave
+#of executors : 1
+Remote Root Directory: c:/
+launch method: launch agent via java webstart
+configure global security-->agent-->random "click"-->ssh server--> random"click"-->apply--> save.
+---------------------------------------------------------------------------------------------------
+manage jenkins-->manage node-->master-->new node-->
+node name"lslave"
+#of executors: 1
+remote root directory: /home/vagrant
+launched method : launch slave agent via ssh
+host: 192.168.33.11
+credentials: root ; root(password: vagrant)
+Host key verification strategy: non verifying verification stratagy
+save"click".
+
+build exective staus:
+--------------------
+lslave(offline)
+wslave(offline)-->open-->launch "click"-->download jenkins remote agent -->run
+-----------------------------------------------------------------------------------------------------
+                                         AUTO DEPLOYMENT
+ Manage Jenkins-->manage plugins-->available-->deploy to container plugin -->click download now install after restart.
+new item -->item name "Automated deployment test"-->free style -->ok.
+goto web page download sample war file-->sample warfile apache tomcat downlaod.
+item name : Autodeployement test
+build: date
+add post build action :deploy war/ear to a container
+WAR/EAR Files:**/*.war
+context path: sample.war
+containers: 
+credential : tomcat add(username & password)
+tomcat url : localhost:8080
+add containers : tomacat 7x
+after install apache tomcat
+apply and save.
+---------------------------------------------------------------------------------------------------------
+                                          SMTP CREATION(server to server integration)
+jenkins-->configure system
+SMTP SERVER: smtp.gmail.com
+after goto advaced opetions
+user SMTP Authentication "click"
+username: comapany mail  id
+password: pass
+use ssl(clik)
+SMTP PORT: 465
+Test configuration by sending test email: 
+test email recepitent : user mail.
+add post build action: E-mail notifications: user mail
+appaly and save .
+
+----------------------------------------------------------------------------------------------------------------
+                                            configure global security
+1). why we are using global security?
+ans; use for url security 
+    ( or )url authentication and autherisation access for will used.
+LDAP Server : it is one type of server , evey company have LDAP server.
+
+manage jenkins-->configure system-->configure global security-->acess control-->jenkins own user database(clik) apply and save
+manage users--> create user--> username , pass, confirm pass, email--> create user.
+manage jenkins--> configure global security-->matrix based security--> user group to add 1. admin and 2. harry
+after click permissions ( admin have all full permissions), other users specific permissions.
+apply and save.
+
+-----------------------------------------------------------------------------------------------------------
+                                         pipeline topic
+jenkins-->new item " sample build job"-->build --> executive shell--> save and apply
+jenkins-->new item " sample deploy job"-->build --> executive shell--> save and apply
+jenkins-->new item " sample Test job"-->build --> executive shell--> save and apply
+
+after build 3 jobs complete successfully..
+1).open deploy job --> configure-->build triggers-->build after other projects are built-->project to watch"sample build job"
+-->trigger only if build is stable..apply and save.
+
+2).open sample test job --> configure-->build triggers-->build after other projects are built-->project to watch"sample deploy job"
+-->trigger only if build is stable..apply and save.
+
+managejenkins-->manage plugins-->delivery pipeline plugin -->install.
+jenkins--> + simble click-->click deviley pipiline--> ok. --> name"test delivery pipeline"-->components-->name"samplebuildjob
+-->initial job "sample build job"-->apply and save.
+enable start of new pipeline build (click).
+enable rebuild (click)
+show total build time(click)
+enable paging-->theme-->constrat
+
+manage jenkins-->manage plugins-->build pipeline plugin install
+worked same as delivery pipe line process.
+--------------------------------------------------------------------------------------------------------------
+                                                        Build Triggers 
+                                                       -----------------
+build periodically: build sechduling  two types of sechduling 1).time based sechduling 2).poll based sechduling
+1).time sechduling: developer commited or not you have mention automatic trigger  specific day and specific time 
+ these called or cron jobs.
+*(min)   * (hr)   *(dom)  *(moy)  *(dow) this is 5 star concept
+(0-59)   (0-23)   (1-31)  (1-12)   (1-7)
+*     6 * * * --Everyday morning 6am
+30    6 * * * --Everyday Morning 6.30 am
+15   23 * * * --11:15 pm 
+15   11 * * * --11:15 am
+ 
+2). Poll scm: it is depend on developer commits                           
+---------------------------------------------------------------------------------------------------------
+                              users -creations
+                               -------------
+
+manage jenkins--> manage users--> create new user.
+mangage jenkins-> configure global security--> matrix based security
